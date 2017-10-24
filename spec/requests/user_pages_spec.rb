@@ -29,27 +29,27 @@ describe "User pages" do
       end
     end
 
-  describe "delete links" do
+    describe "delete links" do
 
-    it { should_not have_link('delete') }
+      it { should_not have_link('delete') }
 
-    describe "as an admin user" do
-      let(:admin) { FactoryGirl.create(:admin) }
-      before do
-        sign_in admin
-        visit users_path
+      describe "as an admin user" do
+        let(:admin) { FactoryGirl.create(:admin) }
+        before do
+          sign_in admin
+          visit users_path
+        end
+
+        it { should have_link('delete', href: user_path(User.first)) }
+        it "should be able to delete another user" do
+          expect do
+            click_link('delete', match: :first)
+          end.to change(User, :count).by(-1)
+        end
+        it { should_not have_link('delete', href: user_path(admin)) }
       end
-
-      it { should have_link('delete', href: user_path(User.first)) }
-      it "should be able to delete another user" do
-        expect do
-          click_link('delete', match: :first)
-        end.to change(User, :count).by(-1)
-      end
-      it { should_not have_link('delete', href: user_path(admin)) }
     end
   end
-end
 
  
   describe "profile page" do
@@ -101,40 +101,25 @@ end
       end
     end
   end
-<<<<<<< HEAD
 
-  describe "edit" do
-    let(:user) { FactoryGirl.create(:user) }
-    before { visit edit_user_path(user) }
-
-    describe "page" do 
-=======
-  describe "edit" do
-    let(:user) { FactoryGirl.create(:user) }
-    before do 
-      sign_in user
-      visit edit_user_path(user)
-    end
+    describe "edit" do
+      let(:user) { FactoryGirl.create(:user) }
+      before do 
+        sign_in user
+        visit edit_user_path(user)
+      end
 
     describe "page" do
->>>>>>> updating-users
       it { should have_content("Update your profile") }
       it { should have_title("Edit user") }
       it { should have_link('change', href: 'http://gravatar.com/emails') }
     end
 
-<<<<<<< HEAD
-    describe "with invalid information" do 
-=======
     describe "with invalid information" do
->>>>>>> updating-users
       before { click_button "Save changes" }
 
       it { should have_content('error') }
     end
-<<<<<<< HEAD
-  end
-=======
 
     describe "with valid information" do
       let(:new_name)  { "New name" }
@@ -145,7 +130,7 @@ end
         fill_in "Password",         with: user.password
         fill_in "Confirm Password", with: user.password
         click_button "Save changes"
-      end
+    end
 
       it { should have_title(new_name) }
       it { should have_selector('div.alert.alert-success') }
@@ -153,7 +138,7 @@ end
       specify { expect(user.reload.name).to   eq new_name }
       specify { expect(user.reload.email).to  eq new_email }
     end
-  end  
->>>>>>> updating-users
-end
+  end
+end 
+
 
