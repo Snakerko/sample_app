@@ -67,13 +67,13 @@ describe "Authentication" do
 
 			describe "when singing in again" do
 				before do
-					sign_in user
+					sign_in(user, no_capybara: true)
 					delete signout_path
 					visit signin_path
 					sign_in user
 				end
 
-				xit "should render the default (profile) page" do
+				it "should render the default (profile) page" do
 					expect(page).to have_title(user.name)
 				end
 			end
@@ -115,6 +115,19 @@ describe "Authentication" do
 
 			it { should_not have_link('Settings') }
 			it { should_not have_link('Profile') }
+
+			describe "in the Microposts controller" do
+
+				describe "submitting to the create action" do
+					before { post microposts_path }
+					specify { expect(response).to redirect_to(signin_path) }
+				end
+
+				describe "submitting to the destroy action" do
+					before { delete micropost_path(FactoryGirl.create(:micropost)) }
+					specify { expect(response).to redirect_to(signin_path) }
+				end
+			end
 		end
 
 		describe "as non-admin user" do
